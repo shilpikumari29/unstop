@@ -1,0 +1,56 @@
+class TrainBooking:
+    def __init__(self):
+        self.seats = [[0] * 7 for _ in range(11)]  # Initialize the seats with 0 (unreserved)
+
+    def display_seats(self):
+        for row in self.seats:
+            for seat in row:
+                print(seat, end=' ')
+            print()
+
+    def reserve_seats(self, num_seats):
+        seats_available = self.find_available_seats(num_seats)
+        if seats_available:
+            self.book_seats(seats_available, num_seats)
+            print("Seats booked successfully!")
+            return True
+        else:
+            print("No seats available.")
+            return False
+
+    def find_available_seats(self, num_seats):
+        for row in range(len(self.seats)):
+            row_seats = self.seats[row]
+            consecutive_seats = 0
+            for seat in row_seats:
+                if seat == 0:
+                    consecutive_seats += 1
+                    if consecutive_seats == num_seats:
+                        return [row, row_seats.index(0) - num_seats + 1]
+                else:
+                    consecutive_seats = 0
+        return None
+
+    def book_seats(self, seats_available, num_seats):
+        row, start_seat = seats_available
+        for seat in range(start_seat, start_seat + num_seats):
+            self.seats[row][seat] = 1
+
+
+train = TrainBooking()
+
+while True:
+    print("1. Display seats")
+    print("2. Reserve seats")
+    print("3. Exit")
+    choice = int(input("Enter your choice: "))
+
+    if choice == 1:
+        train.display_seats()
+    elif choice == 2:
+        num_seats = int(input("Enter the number of seats to reserve: "))
+        train.reserve_seats(num_seats)
+    elif choice == 3:
+        break
+    else:
+        print("Invalid choice. Please try again.")
